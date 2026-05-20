@@ -27,6 +27,7 @@ Gra kończy się tak jak na początku wspominałem na 4 różne sposoby:
 3. Znalezienie 3 oznak życia
 4. Odkrycie starożytnej cywilizacji w punkcie (40, 40) (znajduje się na końcu mapa.json)
 
+Aby gra działała poprawnie należy umieścić plik mapa.json w tym samym folderze co main.py.
 
 ## Funkcje / pomoc w testowaniu
 Wprowadziłem prymitywny sposób sprawdzenia na szybko podstawowych cech gry:
