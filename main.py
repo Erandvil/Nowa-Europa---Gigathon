@@ -391,6 +391,7 @@ class Gra():
         obiekt_lazik.poczatkowy_kat = obiekt_lazik.kat
 
         print(f"[SYSTEM] Wybrano {obiekt_lazik.kierunek_geograficzny}!")
+        self.zolwik.dot(10, "slateblue")
         input("[NACIŚNIJ DOWOLNY KLAWISZ BY KONTYNUOWAĆ]> ")
         self.wyczysc_konsole()
         
@@ -495,6 +496,7 @@ class Gra():
     # Podsumowuje całą grę, czyli co udało się graczowi osiągnąć
     def podsumowanie(self, obiekt_lazik, wiadomosc):
             self.wyczysc_konsole()
+            self.zolwik.dot(12, "moccasin")
             print(f"|============= STATYSTYKI GRY =============|")
             print(f" - Ukończono grę w {obiekt_lazik.liczba_ruchow} ruchach!")
             print(f" - Nazwa wyprawy: {obiekt_lazik.nazwa_wyprawy}")
