@@ -142,7 +142,7 @@ class Mapa():
 
 class Radar():
     def __init__(self):
-        self.zasieg = 3
+        self.zasieg = 6
 
     # Rysuje kluczowe punkty podczas rozrywki
     def narysuj_obiekt(self, x, y, zolwik, przesuniecie, skala, kolor):
@@ -173,10 +173,10 @@ class Radar():
         for typ, komentarz, x, y in obiekt_mapa.pozycje_krysztalow:
             odleglosc_x = abs(x - obiekt_lazik.x)
             odleglosc_y = abs(y - obiekt_lazik.y)
-            if odleglosc_x <= 3 and odleglosc_y <= 3:
+            if odleglosc_x <= self.zasieg and odleglosc_y <= self.zasieg:
                 znaleziono = znaleziono + 1
                 self.narysuj_obiekt(x, y, zolwik, przesuniecie, skala, "purple")
-                print(f"Radar wykrył nieznany minerał x = {x}, y = {y}")
+                print(f"[RADAR] wykrył nieznany minerał x = {x}, y = {y}")
         if znaleziono > 0:
             time.sleep(2)
 
@@ -211,6 +211,12 @@ class Gra():
         self.pozycja_y_przed = 0
         self.energia_przed = 0
         self.paliwo_przed = 0
+        self.energia_min = 100
+        self.paliwo_min = 100
+        self.energia_max = 200
+        self.paliwo_max = 200
+        self.odejmowane_paliwo = 1
+        self.wspolczynnik_odejmowania_energi = 0.1
 
     def powitanie(self):
         print("|----------------------------|")
@@ -281,7 +287,7 @@ class Gra():
         nazwa_wyprawy = input("> ")
         obiekt_lazik.nazwa_wyprawy = nazwa_wyprawy
         print(f"[SYSTEM] Wyprawa o nazwie {nazwa_wyprawy} uznaję za rozpoczętą!")
-        input("[NACIŚNIJ DOWOLNY KLAWISZ BY KONTYNUOWAĆ]> ")
+        input("[NACIŚNIJ ENTER BY KONTYNUOWAĆ]> ")
         self.wyczysc_konsole()
         print("[SYSTEM] Wykryto problem z odczytu parametrów zasobów łazika XXXX\n")
         time.sleep(2)
@@ -294,32 +300,39 @@ class Gra():
         obiekt_lazik.nazwa_pojazdu = pojazd_nazwa
         print("[SYSTEM] Wprowadź parametry zasobów pojazdu (łazika), kontrolki znajdują się przy panelu sterowania pojazdu.\n")
 
-        print("[SYSTEM] Podaj ilość energi:")
+        print(f"[SYSTEM] Podaj ilość energi w przedziale ({self.energia_min}, {self.energia_max}):")
         while True:
             try:
                 dane_energia = int(input("> "))
-                if 10 < dane_energia < 100:
+                if self.energia_min < dane_energia < self.energia_max:
                     obiekt_lazik.energia = dane_energia
                     obiekt_lazik.poczatkowa_energia = dane_energia
                     break
+                else:
+                    print(f"Liczba spoza przedziału! Podaj wartość między {self.energia_min} a {self.energia_max}.")
             except ValueError:
+                print("Niepoprawny typ wproawdzonych danych")
                 time.sleep(1)
 
-        print("[SYSTEM] Podaj ilość paliwa:")
+        print(f"[SYSTEM] Podaj ilość paliwa w przedziale ({self.paliwo_min}, {self.paliwo_max}):")
         while True:
             try:
                 dane_paliwo = int(input("> "))
-                if 10 < dane_paliwo < 100:
+                if self.paliwo_min < dane_paliwo < self.paliwo_max:
                     obiekt_lazik.paliwo = dane_paliwo
                     obiekt_lazik.poczatkowe_paliwo = dane_paliwo
                     break
+                else:
+                    print(f"Liczba spoza przedziału! Podaj wartość między {self.paliwo_min} a {self.paliwo_max}.")
             except ValueError:
+                print("Niepoprawny typ wproawdzonych danych")
                 time.sleep(1)
         
         self.wyczysc_konsole()
         print(f"[SYSTEM] Profil pojazdu: \nNazwa pojazdu - {obiekt_lazik.nazwa_pojazdu}\nZawartość energi w akumulatorach - {obiekt_lazik.energia}kAh\nZawartość paliwa - {obiekt_lazik.paliwo}L")
         input("[NACIŚNIJ DOWOLNY KLAWISZ BY KONTYNUOWAĆ]> ")
         self.wyczysc_konsole()
+        print("[SYSTEM] Po dokonaniu analizy podłoża, możliwy zakres ruchu w planszy 50x50. Jednak końcowa sfera ma bardzo wysokie promieniowanie.\n")
         print(f"[SYSTEM] Wybierz miejsce zrzutu! Teren nadający się do lądowania w przedziałach x(20, 30) y(20, 30)")
 
         while True:
@@ -327,8 +340,12 @@ class Gra():
                 dane_x = int(input("[x]> "))
                 if 20 < dane_x < 30:
                     obiekt_lazik.poczatkowy_x = dane_x
+                    obiekt_lazik.x = obiekt_lazik.poczatkowy_x
                     break
+                else:
+                    print("Liczba powinna mieścić się w przedziale (20, 30)")
             except ValueError:
+                print("Niepoprawny typ wproawdzonych danych")
                 time.sleep(1)
 
         while True:
@@ -336,8 +353,12 @@ class Gra():
                 dane_y = int(input("[y]> "))
                 if 20 < dane_y < 30:
                     obiekt_lazik.poczatkowy_y = dane_y
+                    obiekt_lazik.y = obiekt_lazik.poczatkowy_y
                     break
+                else:
+                    print("Liczba powinna mieścić się w przedziale (20, 30)")
             except ValueError:
+                print("Niepoprawny typ wproawdzonych danych")
                 time.sleep(1)
 
         self.wyczysc_konsole()
@@ -368,14 +389,17 @@ class Gra():
             obiekt_lazik.kat = 180
 
         obiekt_lazik.poczatkowy_kat = obiekt_lazik.kat
-        obiekt_lazik.x = obiekt_lazik.poczatkowy_x
-        obiekt_lazik.y = obiekt_lazik.poczatkowy_y
 
         print(f"[SYSTEM] Wybrano {obiekt_lazik.kierunek_geograficzny}!")
         input("[NACIŚNIJ DOWOLNY KLAWISZ BY KONTYNUOWAĆ]> ")
         self.wyczysc_konsole()
         
-        print(f"|============= WPROWADZONA KONFIGURACJA =============|")
+        print(f"|==================== WPROWADZONA KONFIGURACJA ====================|")
+        print(f" - Granice świata: X od 0 do 50, Y od 0 do 50")
+        print(f" - Warunki do zaliczenia misji:")
+        print(f"        Zebranie 6 minerałów")
+        print(f"        Odkrycie 3 oznak życia")
+        print(f"        Znalezienie pozostałości starożytnej cywilizacji")
         print(f" - Imię kierowcy: {obiekt_lazik.imie}")
         print(f" - Nazwa wyprawy: {obiekt_lazik.nazwa_wyprawy}")
         print(f" - Początkowa orientacja:")
@@ -384,7 +408,7 @@ class Gra():
         print(f" - Początkowe zasoby:")
         print(f"        Paliwo: {obiekt_lazik.poczatkowe_paliwo} [L]")
         print(f"        Energia: {obiekt_lazik.poczatkowa_energia} [kAh]")
-        print(f"|============= -------------- =============|") 
+        print(f"|========================= -------------- =========================|") 
         
         input("[NACIŚNIJ DOWOLNY KLAWISZ BY KONTYNUOWAĆ]> ")
         self.wyczysc_konsole()
@@ -432,12 +456,6 @@ class Gra():
 
     # Sprawdza czy gracz znajduje się na polu z jakimś kryształem/oznaką życia/polem pozostałości starożytnej cywilizacji
     def gracz_znalazl(self, obiekt_mapa, obiekt_lazik):
-        if obiekt_lazik.znalezione_krysztaly == 8:
-            self.podsumowanie(obiekt_lazik, "Znalazłeś wszystkie kryształy!")
-            return True
-        elif obiekt_lazik.znalezione_oznaki_zycia == 3:
-            self.podsumowanie(obiekt_lazik, "Znalazłeś wszystkie oznaki życia!")
-            return True
 
         for krysztal in obiekt_mapa.pozycje_krysztalow[:]:
             typ, komentarz, x, y = krysztal
@@ -446,6 +464,7 @@ class Gra():
                 obiekt_lazik.znalezione_krysztaly += 1
                 print(f"Wow znalazłeś {typ}!")
                 print(f"- {komentarz}")
+                input("[NACIŚNIJ ENTER BY KONTYNUOWAĆ]> ")
 
         for oznaka_zycia in obiekt_mapa.pozycje_oznak_zycia[:]:
             typ, komentarz, x, y = oznaka_zycia
@@ -459,7 +478,14 @@ class Gra():
                 print("Energię otrzymujesz z przemiany ciepła a paliwo z poboru i przetworzenia metanu zawartego w lodzie!")
                 obiekt_lazik.energia += 10
                 obiekt_lazik.paliwo += 20
+                input("[NACIŚNIJ ENTER BY KONTYNUOWAĆ]> ")
 
+        if obiekt_lazik.znalezione_krysztaly == 6:
+            self.podsumowanie(obiekt_lazik, "Znalazłeś wszystkie kryształy!")
+            return True
+        elif obiekt_lazik.znalezione_oznaki_zycia == 3:
+            self.podsumowanie(obiekt_lazik, "Znalazłeś wszystkie oznaki życia!")
+            return True
 
         if obiekt_mapa.pozycja_starozytnej_cywilizacji and obiekt_lazik.x == obiekt_mapa.pozycja_starozytnej_cywilizacji[0] and obiekt_lazik.y == obiekt_mapa.pozycja_starozytnej_cywilizacji[1]:
             self.znalezienie_starozytnej_cywilizacji(obiekt_lazik)
@@ -499,15 +525,13 @@ class Gra():
         radiacja = self.sprawdz_pole(obiekt_mapa, obiekt_lazik)
 
         if radiacja == "średnie":
-            obiekt_lazik.poziom_radiacji += 10
+            obiekt_lazik.poziom_radiacji = 20
         elif radiacja == "wysokie":
-            obiekt_lazik.poziom_radiacji = 32
+            obiekt_lazik.poziom_radiacji = 50
         elif radiacja == "bardzo wysokie":
             self.wpadniecie_pod_lod(obiekt_lazik, "Wjechałeś na teren, cienkiego lodu! PRZEGYRWASZ")
         else:
-            obiekt_lazik.poziom_radiacji -= 2
-            if obiekt_lazik.poziom_radiacji < 0:
-                obiekt_lazik.poziom_radiacji = 0
+            obiekt_lazik.poziom_radiacji = 0
 
     # Zakończenie w którym gracz wpada pod lód
     def wpadniecie_pod_lod(self, obiekt_lazik, wiadomosc):
@@ -526,14 +550,17 @@ class Gra():
     def poczatek_gry(self):
         print("(???) Halo... tu Tomasz Głaz. Słyszysz mnie?")
         time.sleep(2)
-        print("(ty) Tak głośno i wyraźnie!")
+        print("(Ty) Tak głośno i wyraźnie!")
         time.sleep(2)
         print("(Tomasz Głaz) Ahh całe sczęście, obawialiśmy się, że będzie problem z łącznością\nprzez promieniowanie jowisza!")
         time.sleep(2)
         print("(Tomasz Głaz) Na twoim pulpicie powinny się pojawić zadania.")
+        time.sleep(2)
+        print("(Tomasz Głaz) Twoim głównym celem jest odnalezienie 6 rzadkich minerałów lub 3 oznak życia.")
+        time.sleep(2)
         print("(Tomasz Głaz) Powodzenia, jakby coś się działo zgłoś to!")
         time.sleep(2)
-        print("(ty) Trzymaj się!")
+        print("(Ty) Trzymaj się!")
         input("[NACIŚNIJ DOWOLNY KLAWISZ BY KONTYNUOWAĆ]> ")
 
     # Wyświetla statystyki na początku tury
@@ -545,6 +572,9 @@ class Gra():
         print("|")
         print(f"| Stan paliwa = {obiekt_lazik.paliwo}L")
         print(f"| Stan energi = {obiekt_lazik.energia}kAh")
+        print("|")
+        print(f"| Znalezione kryształy = {obiekt_lazik.znalezione_krysztaly}/6")
+        print(f"| Znalezione oznaki życia = {obiekt_lazik.znalezione_oznaki_zycia}/3")
         print("|===========================================|")
 
     # Wyświetla statystyki końcowe tury
@@ -567,7 +597,7 @@ class Gra():
         self.energia_przed = obiekt_lazik.energia
         self.paliwo_przed = obiekt_lazik.paliwo
 
-        obiekt_lazik.energia -= int((obiekt_lazik.poziom_radiacji * 0.5) // 2)
+        obiekt_lazik.energia -= int((obiekt_lazik.poziom_radiacji * self.wspolczynnik_odejmowania_energi) // 2)
         obiekt_lazik.poziom_radiacji -= 0.5
         if obiekt_lazik.poziom_radiacji < 0:
             obiekt_lazik.poziom_radiacji = 0
@@ -594,7 +624,7 @@ class Gra():
             obiekt_lazik.x = 0
             obiekt_lazik.y =0 
 
-            print(f"[SYSTEM/CHEAT] Wybierz miejsce pojazdu... x,y(0, 50)")
+            print(f"[SYSTEM/CHEAT] Wybierz miejsce pojazdu... x,y[0, 50]")
             while True:
                 try:
                     dane_x = int(input("[x]> "))
@@ -602,7 +632,10 @@ class Gra():
                         obiekt_lazik.x = dane_x
                         obiekt_lazik.poczatkowy_x = dane_x
                         break
+                    else:
+                        print("Liczba powinna mieścić się w przedziale [0, 50]")
                 except ValueError:
+                    print("Niepoprawny typ wproawdzonych danych")
                     time.sleep(1)
 
             while True:
@@ -612,7 +645,10 @@ class Gra():
                         obiekt_lazik.y = dane_y
                         obiekt_lazik.poczatkowy_y = dane_y
                         break
+                    else:
+                        print("Liczba powinna mieścić się w przedziale [0, 50]")
                 except ValueError:
+                    print("Niepoprawny typ wproawdzonych danych")
                     time.sleep(1)
 
             self.zolwik.penup()
@@ -621,7 +657,7 @@ class Gra():
 
 
         elif kierunek_ruchu == "zak_wsz_krsz":
-            obiekt_lazik.znalezione_krysztaly = 8
+            obiekt_lazik.znalezione_krysztaly = 6
             self.podsumowanie(obiekt_lazik, "Znalazłeś wszystkie kryształy!")
             self.poczatek = True
             return
@@ -654,9 +690,10 @@ class Gra():
         obiekt_radar.najblizsza_radiacja(obiekt_mapa, obiekt_lazik)
         obiekt_radar.najblizsze_krysztaly(obiekt_mapa, obiekt_lazik, self.zolwik, self.przesuniecie, self.skala)
         obiekt_radar.najblizsze_oznaki_zycia(obiekt_mapa, obiekt_lazik, self.zolwik, self.przesuniecie, self.skala)
+        input("[NACIŚNIJ DOWOLNY KLAWISZ BY KONTYNUOWAĆ]> ")
 
         obiekt_lazik.liczba_ruchow += 1
-        obiekt_lazik.paliwo -= 4
+        obiekt_lazik.paliwo -= self.odejmowane_paliwo
         obiekt_lazik.energia -= self.wydarzenie_losowe("energii", "burzą słoneczną")
         obiekt_lazik.paliwo -= self.wydarzenie_losowe("paliwa", "wyciekiem ze zbiornika paliwa")
 
@@ -705,6 +742,7 @@ while gra.uruchomiony:
         gra.aktywny_lazik = Lazik()
         gra.radar = Radar()
 
+        gra.zolwik.clear()
         gra.wyczysc_konsole()
         gra.powitanie()
         gra.mapa_swiata.zaladuj_mape()
