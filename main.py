@@ -496,7 +496,7 @@ class Gra():
     # Podsumowuje całą grę, czyli co udało się graczowi osiągnąć
     def podsumowanie(self, obiekt_lazik, wiadomosc):
             self.wyczysc_konsole()
-            self.zolwik.dot(12, "moccasin")
+            self.zolwik.dot(12, "lime")
             print(f"|============= STATYSTYKI GRY =============|")
             print(f" - Ukończono grę w {obiekt_lazik.liczba_ruchow} ruchach!")
             print(f" - Nazwa wyprawy: {obiekt_lazik.nazwa_wyprawy}")
