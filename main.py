@@ -724,7 +724,7 @@ class Gra():
     # Funkcja pomocnicza do odczyt_radiacji()
     def sprawdz_pole(self, obiekt_mapa, obiekt_lazik):
         obiekt_lazik.pole_radiacji = "niskie"
-        for poziom, x_pocz, y_pocz, x_konc, y_konc in obiekt_mapa.pozycje_promieniowania:
+        for poziom, x_pocz, y_pocz, x_konc, y_konc in reversed(obiekt_mapa.pozycje_promieniowania):
             if (obiekt_lazik.x >= x_pocz and obiekt_lazik.y >= y_pocz) and (obiekt_lazik.x <= x_konc and obiekt_lazik.y <= y_konc):
                 obiekt_lazik.pole_radiacji = poziom
                 return(poziom)
