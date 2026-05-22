@@ -28,19 +28,17 @@
 
     "krysztaly":
     [
-        {"typ": "kriohalit", "komentarz": "Spory kawałek i to w dobrym stanie!", "x": 20, "y": 30},
+        {"typ": "uranit głębinowy", "komentarz": "Bardzo radioaktywny a za razem bardzo cenny!", "x": 20, "y": 30},
         {"typ": "kriohalit", "komentarz": "Troszkę mały, ale za to w środku jest radioaktywny iryd!", "x": 20, "y": 24},
-        {"typ": "kriohalit", "komentarz": "Mały kawałek, nic ciekawego...", "x": 27, "y": 32},
-        {"typ": "klatrat metanu", "komentarz": "Wysokie ciśnienie utrzymuje metan w strukturze lodu!", "x": 34, "y": 17},
+        {"typ": "klatrat metanu", "komentarz": "Wysokie ciśnienie utrzymuje metan w strukturze lodu!", "x": 27, "y": 32},
         {"typ": "iryd-192", "komentarz": "To naprawdę rzadki okaz...", "x": 25, "y": 26},
         {"typ": "siarczan magnezu", "komentarz": "A to ciekawy minerał!", "x": 27, "y": 23},
-        {"typ": "polimorf lodu", "komentarz": "Ależ dziwny kawałek lodu!", "x": 17, "y": 18},
-        {"typ": "uranit głębinowy", "komentarz": "Bardzo radioaktywny a za razem bardzo cenny!", "x": 33, "y": 14}
+        {"typ": "polimorf lodu", "komentarz": "Ależ dziwny kawałek lodu!", "x": 17, "y": 18}
     ],
 
     "oznaki_zycia":
     [
-        {"typ": "dżownice", "komentarz": "Na oko 3 metrowe dzwonice, żyjące obok komina hydrotermalnego!", "x": 23, "y": 27},
+        {"typ": "dżownice", "komentarz": "Na oko 3 metrowe dżownice, żyjące obok komina hydrotermalnego!", "x": 23, "y": 27},
         {"typ": "ryby", "komentarz": "Pod łazikiem jest cienka warstaw lodu, zauważasz ogromne, dobrze zbudowane okrągłe stworzenia. Wyglądają jak ryby ale nie posiadają oczu, zamiast tego używają dziwny kłębistych wąsków do orientacji.", "x": 27, "y": 30},
         {"typ": "sześciany", "komentarz": "Obok ciebie przechadzają się bardzo powli szaro niebieskie szesciany z odnóżami jak u stawonogów!", "x": 31, "y": 27}
     ],
